@@ -1,0 +1,25 @@
+{
+  "name": "library",
+  "version": "1.0.0",
+  "description": "This is a software engineering training project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrGrRabbit/library.git"
+  },
+  "author": "MrGrRabbit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrGrRabbit/library/issues"
+  },
+  "homepage": "https://github.com/MrGrRabbit/library#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.3.3"
+  }
+}
