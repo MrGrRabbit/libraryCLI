@@ -1,64 +1,147 @@
-const express = require("express");
-const MongoClient = require("mongodb").MongoClient;
+#!/usr/bin/env node
 
-const app = express();
+const { program } = require('commander');
+const { prompt } = require('inquirer');
 
-const port = 3000;
+const { 
+ testDB,
+ findBooks,
+ addBook
+} = require('./models/connectionDB');
 
-app.get("/", (request, response) => {
-    response.send("<h2> 1. Library </h2>");
 
-});
 
-const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/");
-mongoClient.connect(function(err, client){
-    // создание - подключение (обращение) к базе данных usersdb
-    const db = client.db("libraryDB");
-    // создание - подключение к коллеции users
-    const readers = db.collection("readers");
-    const books = db.collection("books");
-    const admin = db.collection("admin");
-    // метод command, проверяет подключение к базе данных (наприер: объектом ping);
-    db.command({ping: 1}, function(err, result){
+const questionsStart = [
+  {
+    type: 'rawlist',
+    name: 'startList',
+    message: 'Choose relevant variant: ',
+    choices: ['authorization', 'other']
+  }
+]
+
+
+const questionsInputName = [
+  {
+  type: 'input',
+  name: 'firstname',
+  message: 'Input name: '
+}
+];
+
+const questionsAddBook = [
+  {
+    type: 'input',
+    name: 'nameBook',
+    message: 'Enter name book: '
+  },
+  {
+    type: 'input',
+    name: 'author',
+    message: 'Enter name author (example: Толстой Л.Н.): '
+  },
+  {
+    type: 'input',
+    name: 'status',
+    message: 'Enter status book (default: true): ',
+    default: 'true'
+  },
+]
+
+const questionsDeleteBook = [
+
+]
+
+function test () {
+  console.log('Check connections to data base');
+  
+  testDB();
+  //testMongoose(); подключение для mongoose
+  
+}
+
+// версия программы
+program
+  .version('0.0.1')
+  .description('User management system');
+
+// старт программы
+program
+  .command('start')
+  .description('Check a connection to data base')
+  .action(() => {
+    prompt(questionsStart).then((answers) => test());
+  });
+
+// авторизация
+const prog = function () { program
+  .command('login', 'login in library')
+  .description('authorization')
+  .alias('l')
+  .action(() => {
+    prompt(questionsInputName).then(() => console.log('авторизаця'));
+  }); 
+}
+// вывод всех книг
+program
+  .command('getAllBooks')
+  .alias('b')
+  .description('See all books')
+  .action(() => findBooks());
+
+program
+  .command('addBook')
+  .description('Add book in library data base')
+  .action(() => {
+    prompt(questionsAddBook).then((answers)=> addBook(answers))
+  })
+program
+  .command('deleteBook')
+  .description('Delete book from library data base')
+
+// показать всех пользователей
+program
+  .command('getReaders')
+  .description('Display all Readers')
+
+
+
+// Assert that a VALID command is provided 
+if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+  program.outputHelp();
+  process.exit();
+}
+program.parse(process.argv);
+
+
+
+// --------------------------------------------------------
+
+/*const program = require('commander');
+const {promt} = require('inquirer');
+
+// добваление файла с библиотекой 
+const getBooks = require('./models/connectionDB');
+
+const questions = [
+    {
+        type: 'input',
+        name: 'nameBook',
+        masssege: 'Название книги: '
         
-        if (!err) {
-            console.log("Подключение с сервером успешно установлено");
-            console.log(result);
-        }
-        else {
-            console.log(err);
-        }
-    });
-    // Получение количества документов в коллекции
-    readers.countDocuments((err, result) => {
+    }
+]
 
-        if (err) {
-            return console.log("Ошибка: " + err);
-        }
+program
+    .command('getBook <name>')
+    .alias('r')
+    .description('Get User')
+    .action(name => getBooks(name));
 
-        console.log(`В коллекции readers: ${result} документов`);
-    });
-    admin.countDocuments((err, result) => {
+if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
+    program.outputHelp();
+    process.exit();
+    }
+    program.parse(process.argv);
 
-        if (err) {
-            return console.log("Ошибка: " + err);
-        }
-
-        console.log(`В коллекции admin: ${result} документов`);
-    });
-    books.countDocuments((err, result) => {
-
-        if (err) {
-            return console.log("Ошибка: " + err);
-        }
-
-        console.log(`В коллекции books: ${result} документов`);
-        client.close();
-        console.log("Подключение закрыто!");
-    });
-
-});
-
-
-
-app.listen(port, () => console.log(`server start, port: ${port}`));
+*/
