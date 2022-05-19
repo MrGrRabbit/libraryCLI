@@ -57,9 +57,8 @@ const addBook = (answers) =>{ mongoClient.connect((err, client) => {
       console.log('Книга добавлена в library' + results);
       console.log(answers);
       client.close();
-    })
-
-})
+    });
+  });
 }
 
 module.exports = { 
