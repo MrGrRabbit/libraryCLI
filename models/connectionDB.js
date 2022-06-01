@@ -1,3 +1,4 @@
+
 const MongoClient = require("mongodb").MongoClient;
 
 const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/library");
@@ -19,12 +20,13 @@ const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/library");
             client.close();
         }
         else {
-            console.log(err);
+            console.log('Ошибка подключения к базе данных' + err);
         }
     });
   });
 }
 
+// поиск книги
 const findBooks = function() {mongoClient.connect(function(err, client) {
 
     // создание - подключение (обращение) к базе данных libraryDB
@@ -42,7 +44,8 @@ const findBooks = function() {mongoClient.connect(function(err, client) {
   });
 }
 
-const addBook = (answers) =>{ mongoClient.connect((err, client) => {
+// добавление книги 
+const addBook = (answers) => { mongoClient.connect((err, client) => {
 
     // создание - подключение (обращение) к базе данных libraryDB
     const db = client.db("libraryDB");
@@ -61,10 +64,31 @@ const addBook = (answers) =>{ mongoClient.connect((err, client) => {
   });
 }
 
+// удаление книги
+const deleteBook = (name) => { mongoClient.connect((err, client) => {
+    // создание - подключение (обращение) к базе данных libraryDB
+    const db = client.db("libraryDB");
+
+    // создание - подключение к коллеции books
+    const books = db.collection("books");
+    
+    books.deleteOne(name, (err, results) => {
+      if (results.daleteCount == 1) {
+
+        console.log('Книга ' + name.nameBook + ' удалена');
+        console.log(results);
+        client.close();
+      }
+    });
+  });
+}
+
+
 module.exports = { 
   testDB,
   findBooks,
-  addBook
+  addBook,
+  deleteBook
 }
 
 //------------------------------------------------

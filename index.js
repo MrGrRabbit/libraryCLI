@@ -2,24 +2,25 @@
 
 const { program } = require('commander');
 const { prompt } = require('inquirer');
+const { prototype } = require('inquirer/lib/objects/choice');
 
-const { 
- testDB,
- findBooks,
- addBook
-} = require('./models/connectionDB');
+// импорт класса Book & checkReaders
+const { Book } = require('./models/book.js')
+const {Readers} = require('./controllers/author');
+// создание экземпляра класса 
+let book = new Book();
+let readers = new Readers();
 
 
-
+// написание вопросов
 const questionsStart = [
   {
     type: 'rawlist',
     name: 'startList',
     message: 'Choose relevant variant: ',
-    choices: ['authorization', 'other']
+    choices: ['Test connection', 'other']
   }
 ]
-
 
 const questionsInputName = [
   {
@@ -49,16 +50,28 @@ const questionsAddBook = [
 ]
 
 const questionsDeleteBook = [
-
+  {
+    type: 'input',
+    name: 'nameBook',
+    message: 'Enter the name of the book you want to delete: '
+  }
 ]
 
-function test () {
-  console.log('Check connections to data base');
-  
-  testDB();
-  //testMongoose(); подключение для mongoose
-  
-}
+const questionsAuth = [
+  {
+    type: 'input',
+    name: 'name',
+    message: 'Enter the user name: '
+  },
+  {
+    type: 'password',
+    name: 'pwd',
+    message: 'Enter the password: '
+  }
+]
+
+//-----------------------------
+// Описание команд скрипта
 
 // версия программы
 program
@@ -70,39 +83,38 @@ program
   .command('start')
   .description('Check a connection to data base')
   .action(() => {
-    prompt(questionsStart).then((answers) => test());
+    prompt(questionsStart).then((answer) => book.mongoDB_Client(answer));
   });
 
-// авторизация
-const prog = function () { program
-  .command('login', 'login in library')
-  .description('authorization')
-  .alias('l')
-  .action(() => {
-    prompt(questionsInputName).then(() => console.log('авторизаця'));
-  }); 
-}
 // вывод всех книг
 program
   .command('getAllBooks')
-  .alias('b')
+  .alias('G')
   .description('See all books')
-  .action(() => findBooks());
-
+  .action(() => book.findBooks());
+// добавление книги
 program
   .command('addBook')
   .description('Add book in library data base')
   .action(() => {
-    prompt(questionsAddBook).then((answers)=> addBook(answers))
-  })
+    prompt(questionsAddBook).then((answers)=> book.addBook(answers))
+  });
+// удаление книги 
 program
   .command('deleteBook')
   .description('Delete book from library data base')
+  .action(() => {
+    prompt(questionsDeleteBook).then((nameBook) => book.deleteBook(nameBook));
+  });
 
-// показать всех пользователей
+// авторизация
 program
-  .command('getReaders')
+  .command('auth')
   .description('Display all Readers')
+  .action(() => {
+    prompt(questionsAuth).then((logIn) => {readers.checkReaders(logIn.name);
+    }); 
+  });
 
 
 
@@ -112,36 +124,3 @@ if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
   process.exit();
 }
 program.parse(process.argv);
-
-
-
-// --------------------------------------------------------
-
-/*const program = require('commander');
-const {promt} = require('inquirer');
-
-// добваление файла с библиотекой 
-const getBooks = require('./models/connectionDB');
-
-const questions = [
-    {
-        type: 'input',
-        name: 'nameBook',
-        masssege: 'Название книги: '
-        
-    }
-]
-
-program
-    .command('getBook <name>')
-    .alias('r')
-    .description('Get User')
-    .action(name => getBooks(name));
-
-if (!process.argv.slice(2).length || !/[arudl]/.test(process.argv.slice(2))) {
-    program.outputHelp();
-    process.exit();
-    }
-    program.parse(process.argv);
-
-*/
