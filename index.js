@@ -1,17 +1,22 @@
 #!/usr/bin/env node
 
+/**
+ * @module index
+ * @description Подключение библиотек commander и inquirer. </br>
+ * Создание вопросов для команд. </br>
+ * Команды принимают методы от классов book и readers
+ */
+
 const { program } = require('commander');
 const { prompt } = require('inquirer');
-const { prototype } = require('inquirer/lib/objects/choice');
 
-// импорт класса Book & checkReaders
 const { Book } = require('./models/book.js')
 const {Readers} = require('./controllers/author');
 // создание экземпляра класса 
 let book = new Book();
 let readers = new Readers();
 
-
+/**Создание вопросов */
 // написание вопросов
 const questionsStart = [
   {
@@ -71,8 +76,8 @@ const questionsAuth = [
 ]
 
 //-----------------------------
-// Описание команд скрипта
 
+/**Описание команд скрипта */ 
 // версия программы
 program
   .version('0.0.1')

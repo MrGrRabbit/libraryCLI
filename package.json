@@ -6,7 +6,7 @@
   "preferGlobal": true,
   "bin": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha index.test.js",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
@@ -25,5 +25,9 @@
     "express": "^4.18.1",
     "inquirer": "^8.2.4",
     "mongoose": "^6.3.3"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.10",
+    "mocha": "^10.0.0"
   }
 }

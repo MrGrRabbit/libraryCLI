@@ -1,11 +1,29 @@
+/**
+ * @module Book
+ * @description Класс книги.</br>
+ * модуль включает методы управления книгами. </br>
+ */
+
 const MongoClient = require("mongoDB").MongoClient;
 
 const mongoClient = new MongoClient("mongodb://127.0.0.1:27017/library");
-
+/**
+ * @class Book
+ * @description Класс Book - книги
+ */
 
 class Book {
 
-  // Тест подключения к базе данных
+  constructor(nameBook) {
+    this.nameBook = nameBook;
+  }
+
+  /**
+   * @function
+   * @name mongoDB_Client
+   * @returns 1
+   * Тестирует подключение к базе данных.</br>
+   */
   mongoDB_Client() { mongoClient.connect(function(err, client) {
           // создание - подключение (обращение) к базе данных libraryDB
           const db = client.db("libraryDB");
@@ -14,18 +32,26 @@ class Book {
           db.command({ping: 1}, function(err, result){
           
               if (!err) {
-                  console.log("Подключение с сервером успешно установлено");
-                  console.log(result);
-                  client.close();
+                console.log("Подключение с сервером успешно установлено");
+                console.log(result);
+                client.close();
+                                  
               }
               else {
-                  console.log('Ошибка подключения к базе данных' + err);
+                  return console.log('Ошибка подключения к базе данных' + err);
               }
+              //return result;
           });
       });
+      return 1;
   }
 
   // метод поиск книги
+  /**
+   * @function
+   * @name findBooks
+   * @description метод выполняет поиск книги в библиотеке по названию </br>
+   */
   findBooks () {mongoClient.connect(function(err, client) {
 
       // создание - подключение (обращение) к базе данных libraryDB
@@ -44,6 +70,14 @@ class Book {
   }
 
   // добавление книги
+  /**
+   * @function
+   * @name addBook
+   * @param {string} answer 
+   * @description Метод осуществляет добавление книги. </br>
+   * Вызывается ряд вопросов, в которые передаются параметры книги.</br>
+   * Параметры передается в метод, который формирует запрос в базу данных. </br>
+   */
   addBook (answer) { mongoClient.connect((err, client) => {
 
           // создание - подключение (обращение) к базе данных libraryDB
@@ -65,6 +99,12 @@ class Book {
   }
 
   // удаление книги
+  /**
+   * @function
+   * @name deleteBook
+   * @param {string} name 
+   * @description Метод осуществляет удаление книги </br>
+   */
   deleteBook (name) {mongoClient.connect((err, client) => {
       
       // создание - подключение (обращение) к базе данных libraryDB
@@ -88,5 +128,5 @@ class Book {
 }
 
 module.exports = {
-    Book
+    Book,
 }
