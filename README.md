@@ -2,7 +2,7 @@
 # Electronic Library #
 
 Название системы — электронная библиотека.
-***
+***  <!-- !!!! убрать -->
 
 ## Description ##
 
@@ -16,11 +16,12 @@
 
 #### Diagram Precedent ####
 
-![alt text](source\Precedent.drawio.png "This is diagramm class")
+<!--![alt text](./source/Precedent.drawio.png "This is diagramm class")-->
+![alt text](https://github.com/MrGrRabbit/library/blob/main/source/Precedent.drawio.png "This is diagramm class")
 
 #### Diagram Class ####
-
-![alt text](source\Class.drawio.png "This is diagramm class")
+<!--![alt text](./source/Class.drawio.png) -->
+![alt text](https://github.com/MrGrRabbit/library/blob/main/source/Class.drawio.png "This is diagramm class")
 
 ## Technologies in the project ##
 
